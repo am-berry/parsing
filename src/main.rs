@@ -1,7 +1,7 @@
 extern crate serde;
 
 use serde_json::{Result, Value};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize};
 
 use std::error::Error;
 use std::fs::File;
@@ -13,16 +13,17 @@ struct Data {
     selftext: String,
 }
 
-fn read_from_file<P: AsRef<Path>>(path: P) -> Result<Data, Box<Error>> {
-    let stdin = std::io::stdin();
-    let stdin = stdin.lock();
-
-    let deserializer = serde_json::Deserializer::from_reader("./data/2011-01.json");
-    let iterator = deserializer.into_iter::<serde_json::Value>();
+fn read_from_file<P: AsRef<Path>>(path: P) -> Result<()> {
+    let file = File::open(path);
+    let reader = BufReader::new(file);
+    
+    let deserializer = serde_json::Deserializer::from_reader(reader);
+    let iterator = deserializer.into_iter::<Value>();
     for item in iterator {
-        println!("Got {:?}", item?);
-    }
-
+        let v: Value = item["selftext"];
     Ok(())
+}
 
+fn main() {
+   read_from_file("./data/2011-01.json").unwrap();
 }

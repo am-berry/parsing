@@ -8,6 +8,4 @@ edition = "2018"
 
 [dependencies]
 ajson = "0.2.3"
-
-[build-dependencies]
-ajson = "0.2.3"
+csv = "1.1.3"

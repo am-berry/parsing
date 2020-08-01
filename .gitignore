@@ -1,4 +1,5 @@
 env/
+data/
 *.bz2
 *.json
 

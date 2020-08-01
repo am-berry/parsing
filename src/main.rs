@@ -4,6 +4,10 @@ extern crate csv;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+fn csv_conv() {
+    
+}
+
 fn main() {
     let mut vals = Vec::new();
     let f = File::open("src/data/2011-01.json").unwrap();

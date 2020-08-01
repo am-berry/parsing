@@ -1,4 +1,5 @@
 extern crate ajson;
+extern crate csv;
 
 use std::fs::File;
 use std::io::{BufRead, BufReader};

@@ -16,23 +16,22 @@ fn parse_json(p: String) -> Result<Vec<String>, Box<dyn Error>> {
         let txt = txt.unwrap();
         let lower = txt.as_str().to_lowercase();
         if lower.contains("tl;dr") | lower.contains("tl:dr") {
-            println!("{:?}", lower);
             vals.push(lower);
         }
     }
     Ok(vals)
-    
 }
 
 fn csv_conv(V: Vec<String>) -> Result<(), Box<dyn Error>> {
     let mut wtr = Writer::from_path("res.csv")?;
     wtr.write_record(V)?;
-   
     wtr.flush()?;
     Ok(())
 }
 
 fn main() {
     let mut vals = parse_json("./src/data/2011-01.json".to_string());
-    csv_conv(vals.unwrap());
+    let vals = vals.unwrap();
+    println!("{}", vals.len());
+    csv_conv(vals);
 }

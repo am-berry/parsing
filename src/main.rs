@@ -26,13 +26,16 @@ fn trawl_files() -> Result<Vec<String>, Box<dyn Error>> {
 
 fn matching(V: &str) -> Result<String, Box<dyn Error>> { 
     lazy_static! {
-        static ref RE: Regex = Regex::new(r"(tl;dr|tl:dr).*\n").unwrap();
+        static ref RE: Regex = Regex::new(r"(tl;dr|tl:dr).*").unwrap();
     }
     let caps = RE.captures(V).unwrap();
     Ok(caps[0].to_owned())
 }   
 
-fn parse_json(p: String) -> Result<Vec<String>, Box<dyn Error>> {
+fn parse_json(p: String) -> Result<Vec<(String, String)>, Box<dyn Error>> {
+    lazy_static! {
+        static ref RE: Regex = Regex::new(r"(tl;dr|tl:dr).*").unwrap();
+    }
     let mut vals = Vec::new();
     let f = File::open(p.to_string()).unwrap();
     let reader = BufReader::new(f);
@@ -41,27 +44,26 @@ fn parse_json(p: String) -> Result<Vec<String>, Box<dyn Error>> {
         let txt = txt.unwrap();
         let lower = txt.as_str().to_lowercase();
         if lower.contains("tl;dr") | lower.contains("tl:dr") {
-            vals.push(lower);
+            let caps = RE.captures(&lower).unwrap();
+            let rep = RE.replace_all(&lower, "").into();
+            vals.push((rep, caps[0].to_owned()));
         }
     }
     Ok(vals)
 }
 
-fn csv_conv(V: Vec<String>) -> Result<(), Box<dyn Error>> {
+fn csv_conv(V: Vec<(String, String)>) -> Result<(), Box<dyn Error>> {
     let mut wtr = Writer::from_path("res.csv")?;
-    wtr.write_record(V)?;
+    wtr.write_record(&["Text", "Summary"])?;
+    for item in V {
+        wtr.write_record(&[item.0, item.1])?;
+    }
     wtr.flush()?;
     Ok(())
 }
 
 fn main() {
-    let mut files = trawl_files().unwrap();
-    println!("{:?}", files);
-    let mut vals = parse_json("./src/data/2011-01.json".to_string());
-    let vals = vals.unwrap();
-    println!("{}", vals.len());
+    let vals = parse_json("./src/data/2011-01.json".to_string()).unwrap();
+    println!("{} -------- {}", vals[0].0, vals[0].1);
     csv_conv(vals);
-    let test = "tl;dr - I'm expecting The Cape might not be The Spirit/Sin City that NBC has made it out to be.\n";
-    let t = matching(test).unwrap();
-    println!("{}", t);
 }

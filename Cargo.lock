@@ -82,6 +82,8 @@ version = "0.1.0"
 dependencies = [
  "ajson",
  "csv",
+ "lazy_static",
+ "regex",
 ]
 
 [[package]]

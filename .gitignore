@@ -5,3 +5,5 @@ target/
 *.json
 venv/
 *.csv
+*.png
+

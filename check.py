@@ -1,22 +1,30 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import re
 import pandas as pd
 import matplotlib.pyplot as plt
 
-d = pd.read_csv('res.csv').transpose() 
-d = d.reset_index()
-d.columns = ['text']
+d = pd.read_csv('res.csv') 
+print(d.head(10))
 
 def f(x):
-    return re.findall(r'tl[;:]dr(.+ ?)', x)
+    return x[6:]
 
-d['summary'] = d['text'].apply(f)
-d['num_tldr'] = d['summary'].apply(len)
+def g(x):
+    step = 0
+    try:
+        while not x[step].isalpha():
+            step += 1
+    except:
+        return x 
+    return x[step:]
 
-d['summary'] = d['summary'].apply(lambda x: x[0] if len(x)>0 else 0)
+def h(x):
+    return x.lstrip()
 
-d['summary_len'] = d['summary'].apply(lambda x: len(x) if x!=0 else 0)
+d['Sum'] = d['Summary'].apply(f)
+d['Sum'] = d['Sum'].apply(g)
+d['Sum'] = d['Sum'].apply(h)
 
-a = d.hist(column='summary_len', bins = 10)
-plt.savefig('i.png')
+print(d.head())
+print(d.summary())

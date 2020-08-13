@@ -37,6 +37,7 @@ fn parse_json(p: String) -> Result<Vec<(String, String)>, Box<dyn Error>> {
         static ref RE: Regex = Regex::new(r"(tl;dr|tl:dr).*").unwrap();
     }
     let mut vals = Vec::new();
+    {
     let f = File::open(p.to_string()).unwrap();
     let reader = BufReader::new(f);
     for item in reader.lines() {
@@ -48,6 +49,7 @@ fn parse_json(p: String) -> Result<Vec<(String, String)>, Box<dyn Error>> {
             let rep = RE.replace_all(&lower, "").into();
             vals.push((rep, caps[0].to_owned()));
         }
+    }
     }
     Ok(vals)
 }
@@ -64,6 +66,5 @@ fn csv_conv(V: Vec<(String, String)>) -> Result<(), Box<dyn Error>> {
 
 fn main() {
     let vals = parse_json("./src/data/2011-01.json".to_string()).unwrap();
-    println!("{} -------- {}", vals[0].0, vals[0].1);
     csv_conv(vals);
 }

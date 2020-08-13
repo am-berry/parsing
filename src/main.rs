@@ -3,11 +3,9 @@ extern crate csv;
 extern crate regex;
 #[macro_use] extern crate lazy_static;
 
-use std::path::Path;
 use std::error::Error;
-use std::fs::{File, read_dir};
+use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::io;
 use csv::Writer;
 use regex::Regex;
 
@@ -24,11 +22,11 @@ fn trawl_files() -> Result<Vec<String>, Box<dyn Error>> {
 
 //write a regex func which finds the summary through end of line
 
-fn matching(V: &str) -> Result<String, Box<dyn Error>> { 
+fn matching(v: &str) -> Result<String, Box<dyn Error>> { 
     lazy_static! {
         static ref RE: Regex = Regex::new(r"(tl;dr|tl:dr).*").unwrap();
     }
-    let caps = RE.captures(V).unwrap();
+    let caps = RE.captures(v).unwrap();
     Ok(caps[0].to_owned())
 }   
 
@@ -54,10 +52,10 @@ fn parse_json(p: String) -> Result<Vec<(String, String)>, Box<dyn Error>> {
     Ok(vals)
 }
 
-fn csv_conv(V: Vec<(String, String)>) -> Result<(), Box<dyn Error>> {
+fn csv_conv(v: Vec<(String, String)>) -> Result<(), Box<dyn Error>> {
     let mut wtr = Writer::from_path("res.csv")?;
     wtr.write_record(&["Text", "Summary"])?;
-    for item in V {
+    for item in v {
         wtr.write_record(&[item.0, item.1])?;
     }
     wtr.flush()?;

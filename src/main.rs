@@ -3,6 +3,8 @@ extern crate csv;
 extern crate regex;
 #[macro_use] extern crate lazy_static;
 
+use std::path::Path;
+use std::fs;
 use std::error::Error;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -22,6 +24,7 @@ fn trawl_files() -> Result<Vec<String>, Box<dyn Error>> {
 
 //write a regex func which finds the summary through end of line
 
+/*
 fn matching(v: &str) -> Result<String, Box<dyn Error>> { 
     lazy_static! {
         static ref RE: Regex = Regex::new(r"(tl;dr|tl:dr).*").unwrap();
@@ -29,25 +32,30 @@ fn matching(v: &str) -> Result<String, Box<dyn Error>> {
     let caps = RE.captures(v).unwrap();
     Ok(caps[0].to_owned())
 }   
+*/
 
-fn parse_json(p: String) -> Result<Vec<(String, String)>, Box<dyn Error>> {
+fn parse_json(p: &Path) -> Result<Vec<(String, String)>, Box<dyn Error>> {
     lazy_static! {
         static ref RE: Regex = Regex::new(r"(tl;dr|tl:dr).*").unwrap();
     }
     let mut vals = Vec::new();
-    {
-    let f = File::open(p.to_string()).unwrap();
-    let reader = BufReader::new(f);
-    for item in reader.lines() {
-        let txt = ajson::get(&item.unwrap(), "selftext");
-        let txt = txt.unwrap();
-        let lower = txt.as_str().to_lowercase();
-        if lower.contains("tl;dr") | lower.contains("tl:dr") {
-            let caps = RE.captures(&lower).unwrap();
-            let rep = RE.replace_all(&lower, "").into();
-            vals.push((rep, caps[0].to_owned()));
+    if p.is_dir() {
+        for entry in fs::read_dir(p)? {
+            let entry = entry?;
+            let path = entry.path();
+            let f = File::open(path)?;
+            let reader = BufReader::new(f);
+            for item in reader.lines() {
+                let txt = ajson::get(&item.unwrap(), "selftext");
+                let txt = txt.unwrap();
+                let lower = txt.as_str().to_lowercase();
+                if lower.contains("tl;dr") | lower.contains("tl:dr") {
+                    let caps = RE.captures(&lower).unwrap();
+                    let rep = RE.replace_all(&lower, "").into();
+                    vals.push((rep, caps[0].to_owned()));
+                }
+            }
         }
-    }
     }
     Ok(vals)
 }
@@ -63,6 +71,7 @@ fn csv_conv(v: Vec<(String, String)>) -> Result<(), Box<dyn Error>> {
 }
 
 fn main() {
-    let vals = parse_json("./src/data/2011-01.json".to_string()).unwrap();
+    let dir = Path::new(&"./src/data/");
+    let vals = parse_json(dir).unwrap(); 
     csv_conv(vals);
 }

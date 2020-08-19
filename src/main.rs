@@ -11,7 +11,6 @@ use std::io::{BufRead, BufReader};
 use csv::Writer;
 use regex::Regex;
 
-/*
 fn trawl_files() -> Result<Vec<String>, Box<dyn Error>> {
     // want to look through a directory, and get a list of 
     // .json files  
@@ -20,11 +19,9 @@ fn trawl_files() -> Result<Vec<String>, Box<dyn Error>> {
         .collect::<Result<Vec<_>, io::Error>>()?;
     Ok(files)
 }
-*/
 
 //write a regex func which finds the summary through end of line
 
-/*
 fn matching(v: &str) -> Result<String, Box<dyn Error>> { 
     lazy_static! {
         static ref RE: Regex = Regex::new(r"(tl;dr|tl:dr).*").unwrap();
@@ -32,7 +29,6 @@ fn matching(v: &str) -> Result<String, Box<dyn Error>> {
     let caps = RE.captures(v).unwrap();
     Ok(caps[0].to_owned())
 }   
-*/
 
 fn parse_json(p: &Path) -> Result<Vec<(String, String)>, Box<dyn Error>> {
     lazy_static! {

@@ -5,5 +5,6 @@
 /mnt/c/Program\ Files\ \(x86\)/7-zip/7z.exe e *.xz
 
 for f in * ; do
-    mv "$f" "$f.json"
+    case $f in *.*) continue;; esac
+    mv  -- "$f" "${f}.json"
 done

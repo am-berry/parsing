@@ -7,7 +7,7 @@ print("Download starting...")
 months = ["0"+str(i) for i in range(1, 9)] 
 months.extend([str(i) for i in range(10, 13)])
 years = list(range(2011, 2020))
-extensions = ["bz2", "xz", "bz2"]
+extensions = ["zst", "xz", "bz2"]
 
 urls = [f"https://files.pushshift.io/reddit/submissions/RS_{i}-{j}.{k}" for i
         in years for j in months for k in extensions]

@@ -1,6 +1,5 @@
 env/
 target/
-*/data/
 *.bz2
 *.json
 venv/

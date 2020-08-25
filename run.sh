@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo Downloading
+echo -e "Downloading\n"
 python3 /src/data/download_data.py
-echo Downloads complete
-echo Unzipping
+echo -e "Downloads complete\n"
+echo -e "Unzipping\n"
 source /src/data/unzip.sh
-echo Unzipping complete\n
+echo -e "Complete\n"

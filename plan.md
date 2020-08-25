@@ -3,7 +3,7 @@
 Checklist for programming tasks:
 
 - Want to parse as many of the reddit posts into a huge csv file: to this end,
-    write a bash script to download all the files from pushshift, then loop
+    write a ~~bash~~ Python script to download all the files from pushshift [x], then loop
     them in `src/main.rs`
 
 - Have this done by end of August: so far, the parser for a json lines file has

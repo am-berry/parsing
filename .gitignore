@@ -1,8 +1,9 @@
 env/
 target/
+
 *.bz2
+*.xz
+*.zst
 *.json
-venv/
 *.csv
 *.png
-

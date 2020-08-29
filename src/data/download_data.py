@@ -1,5 +1,6 @@
 #!/usr/bin/env python3 
 
+import os 
 import urllib.request 
 
 print("Download starting...")
@@ -17,7 +18,11 @@ print(urls)
 for u in urls:
     try:
         fn = u.split("/")[-1]
-        urllib.request.urlretrieve(u, f"./{fn}")
-        print(f"Downloaded data from {u}")
+        if not os.path.exists(f"./{fn}"):
+            urllib.request.urlretrieve(u, f"./{fn}")
+            print(f"Downloaded data from {u}")
+        else:
+            print(f"{u} download already exists")
+            continue
     except:
         print(f"Downloading {u} failed")

@@ -25,3 +25,5 @@ d['Sum'] = d['Sum'].apply(g)
 d['Sum'] = d['Sum'].apply(h)
 
 print(d.head())
+print(d.describe())
+print(d.shape)

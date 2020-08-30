@@ -4,5 +4,5 @@
 #python3 ./src/data/download_data.py
 #echo -e "Downloads complete\n"
 echo -e "Unzipping\n"
-source ./src/unzip.sh
+source ./worker.sh
 echo -e "Complete\n"

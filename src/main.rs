@@ -6,7 +6,7 @@ extern crate regex;
 use std::path::Path;
 use std::fs;
 use std::error::Error;
-use std::fs::File;
+use std::fs::{File, OpenOptions};
 use std::io::{BufRead, BufReader};
 use csv::Writer;
 use regex::Regex;
@@ -55,7 +55,12 @@ fn parse_json(p: &Path) -> Result<Vec<(String, String)>, Box<dyn Error>> {
 }
 
 fn csv_conv(v: Vec<(String, String)>) -> Result<(), Box<dyn Error>> {
-    let mut wtr = Writer::from_path("res.csv")?;
+    let f = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open("res.csv")
+        .unwrap();
+    let mut wtr = Writer::from_writer(f);
     wtr.write_record(&["Text", "Summary"])?;
     for item in v {
         wtr.write_record(&[item.0, item.1])?;

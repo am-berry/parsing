@@ -6,8 +6,8 @@ for f in * ; do
     fi
 done
 
-nocache /mnt/c/Program\ Files\ \(x86\)/7-zip/7z.exe e *.bz2
-nocache /mnt/c/Program\ Files\ \(x86\)/7-zip/7z.exe e *.xz
+nocache 7z e *.bz2
+nocache 7z e *.xz
 
 for f in * ; do
     if [[ ! -d $f ]]; then

@@ -35,21 +35,19 @@ fn parse_json(p: &Path) -> Result<Vec<(String, String)>, Box<dyn Error>> {
         static ref RE: Regex = Regex::new(r"(tl;dr|tl:dr).*").unwrap();
     }
     let mut vals = Vec::new();
-    if p.is_dir() {
-        for entry in fs::read_dir(p)? {
-            let entry = entry?;
-            let path = entry.path();
-            let f = File::open(path)?;
-            let reader = BufReader::new(f);
-            for item in reader.lines() {
-                let txt = ajson::get(&item.unwrap(), "selftext");
-                let txt = txt.unwrap();
-                let lower = txt.as_str().to_lowercase();
-                if lower.contains("tl;dr") | lower.contains("tl:dr") {
-                    let caps = RE.captures(&lower).unwrap();
-                    let rep = RE.replace_all(&lower, "").into();
-                    vals.push((rep, caps[0].to_owned()));
-                }
+    for entry in fs::read_dir(p)? {
+        let entry = entry?;
+        let path = entry.path();
+        let f = File::open(path)?;
+        let reader = BufReader::new(f);
+        for item in reader.lines() {
+            let txt = ajson::get(&item.unwrap(), "selftext");
+            let txt = txt.unwrap();
+            let lower = txt.as_str().to_lowercase();
+            if lower.contains("tl;dr") | lower.contains("tl:dr") {
+                let caps = RE.captures(&lower).unwrap();
+                let rep = RE.replace_all(&lower, "").into();
+                vals.push((rep, caps[0].to_owned()));
             }
         }
     }

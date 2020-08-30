@@ -4,7 +4,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 d = pd.read_csv('res.csv') 
-print(d.head(10))
 
 def f(x):
     return x[6:]
@@ -26,4 +25,3 @@ d['Sum'] = d['Sum'].apply(g)
 d['Sum'] = d['Sum'].apply(h)
 
 print(d.head())
-print(d.describe())

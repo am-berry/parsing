@@ -20,8 +20,9 @@ for i, row in d.iterrows():
         for sent in summ.split('.'):
             summ_sents += sent 
             summ_sents += "\n@highlight\n"
-        fin = p1+summ_sents
-        fin = fin.rstrip('\n@highlight\n').strip()
+        fin = p1+'\n'+summ_sents
+        fin =\
+        fin.strip().rstrip('\n@highlight\n').rstrip('**').strip().rstrip('@highlight').strip()
         with open(f'./raw/{i}.story', "w") as f:
             f.write(fin)
     except:

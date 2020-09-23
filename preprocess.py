@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import pandas as pd
-import matplotlib.pyplot as plt
 
 d = pd.read_csv('res.csv') 
 
@@ -24,6 +23,9 @@ d['Sum'] = d['Summary'].apply(f)
 d['Sum'] = d['Sum'].apply(g)
 d['Sum'] = d['Sum'].apply(h)
 
-print(d.head())
 print(d.shape)
-print(d.describe())
+
+d.drop_duplicates(inplace=True)
+d.drop('Summary', axis= 1,inplace=True)
+
+d.to_csv('processed.csv', sep = ',', index=False)

@@ -7,3 +7,4 @@ target/
 *.json
 *.csv
 *.png
+*.story

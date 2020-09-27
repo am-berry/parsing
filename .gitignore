@@ -1,6 +1,7 @@
 env/
 PreSumm/
 target/
+temp/
 
 *.bz2
 *.xz
@@ -9,3 +10,4 @@ target/
 *.csv
 *.png
 *.story
+*.pt

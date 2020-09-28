@@ -6,12 +6,11 @@
 
 import pandas as pd
 
-d = pd.read_csv('processed.csv', error_bad_lines=False)
+d = pd.read_csv('processed.csv', error_bad_lines=False, nrows = 100000)
 
 print(d.columns)
 
 for i, row in d.iterrows():
-    print(i)
     txt = row['Text']
     summ = row['Sum']
     try:

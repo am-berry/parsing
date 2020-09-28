@@ -2,6 +2,10 @@ env/
 PreSumm/
 target/
 temp/
+jsl/
+pyt/
+raw/
+tokenized/
 
 *.bz2
 *.xz

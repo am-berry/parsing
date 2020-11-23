@@ -1,0 +1,9 @@
+[2020-09-29 00:17:30,919 INFO] loading vocabulary file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/smooth/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+[2020-09-29 00:17:30,954 INFO] Processing /home/smooth/thesis/jsl/.train.0.json
+[2020-09-29 00:17:38,830 INFO] Processed instances 1915
+[2020-09-29 00:17:38,830 INFO] Saving to /home/smooth/thesis/pyt/.train.0.bert.pt
+[2020-09-29 00:34:01,167 INFO] Ignore /home/smooth/thesis/pyt/.train.0.bert.pt
+[2020-09-29 00:34:24,098 INFO] loading vocabulary file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/smooth/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
+[2020-09-29 00:34:24,136 INFO] Processing /home/smooth/thesis/jsl/.train.0.json
+[2020-09-29 00:34:32,009 INFO] Processed instances 1915
+[2020-09-29 00:34:32,009 INFO] Saving to /home/smooth/thesis/pyt/.train.0.bert.pt

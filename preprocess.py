@@ -2,6 +2,7 @@
 
 import pandas as pd
 import nltk
+import rouge
 
 '''
 d = pd.read_csv('res.csv') 
@@ -43,3 +44,6 @@ d['sum_len'] = d['sum_sents'].apply(len)
 
 print(d.head(10))
 d.to_csv('prp.csv', sep=',', index=False)
+
+
+

@@ -46,6 +46,12 @@ generated_test = test['joined'].tolist()
 reference_train = train['Sum'].tolist()
 reference_test = test['Sum'].tolist()
 
+train_df = train[(train['joined'].apply(lambda x: 500 > len(x) > 25)) & (train['Sum'].apply(lambda x: 500 > len(x) > 25))]
+test_df = test[(test['joined'].apply(lambda x: 500 > len(x) > 25)) & (test['Sum'].apply(lambda x: 500 > len(x) > 25))]
+
+print(train_df.head())
+print(test_df.head())
+
 gen_and_ref = zip(generated_train, reference_train)
 gen_and_ref = [_ for _ in gen_and_ref if 500 > len(_[0]) > 25 and 500 > len(_[1]) > 25]
 generated_train, reference_train = zip(*gen_and_ref)
@@ -66,8 +72,11 @@ new_test = pd.DataFrame(
 
 del generated_test, reference_test
 
-new_train.to_csv('./data/train.csv', sep=',', index=False)
-new_test.to_csv('./data/test.csv', sep=',', index=False)
+# want to save original text, reference summary and summary length 
+
+train_df.to_csv('./data/train.csv', sep=',', index=False)
+train_df.to_csv('./data/test.csv', sep=',', index=False)
+
 '''
 evaluator = rouge.Rouge(metrics=['rouge-n', 'rouge-l', 'rouge-w'],
                            max_n=2,

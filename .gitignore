@@ -6,6 +6,7 @@ jsl/
 pyt/
 raw/
 tokenized/
+models/
 
 *.bz2
 *.xz

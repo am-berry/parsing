@@ -3,7 +3,6 @@ LexRank re-implementation
 Based on: https://github.com/crabcamp/lexrank/tree/dev
 """
 
-
 import numpy as np
 from scipy.sparse.csgraph import connected_components
 
@@ -25,15 +24,15 @@ def stationary_dist(mat):
         dist[group] = eigenvector
     return dist
 
-
 def power_method(mat):
     eigen = np.ones(len(mat))
     if len(eigen) == 1:
         return eigen
     t = mat.T
+    c=0
     while True:
         next_eigen = np.dot(t, eigen)
-        if np.allclose(next_eigen, eigen):
+        if np.allclose(next_eigen, eigen) or c > 10:
             return next_eigen
         eigen = next_eigen
         t = np.dot(t, t)

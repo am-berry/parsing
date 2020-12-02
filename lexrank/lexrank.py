@@ -5,16 +5,24 @@ import pandas as pd
 import nltk
 import numpy as np
 from lexrank_utils import *
+import time
 
-test = pd.read_csv('./data/test.csv', sep=',')[20000:20005]
-model = SentenceTransformer('./models/')
+t = time.time()
+
+test = pd.read_csv('../data/test.csv', sep=',')[:100]
+model = SentenceTransformer('../models/', device='cuda')
 
 test['split_text'] = test['Text'].apply(nltk.sent_tokenize)
 split_sents = test['split_text'].tolist()
 
 embeddings = []
-for doc in split_sents:
+for i, doc in enumerate(split_sents):
+    if i % 100 == 0:
+        print(f'{i} sentences encoded')
     embeddings.append(model.encode(doc))
+
+print(f'embeddings done')
+del split_sents
 
 # implementation of fast pairwise cosine similarity calculations
 # based on https://stackoverflow.com/questions/17627219/whats-the-fastest-way-in-python-to-calculate-cosine-similarity-given-sparse-mat
@@ -29,17 +37,24 @@ for doc in embeddings:
     cosine = cosine.T * inv_mag
     pairwise_cos.append(cosine)
 
-centrality = []
-for cos in pairwise_cos:
-    scores = degree_centrality_scores(cos)
-    centrality.append(scores)
+print('cosine done')
 
-central_indices = []
-for score in centrality:
-    central_indices.append(np.argsort(-score))
+del embeddings
+
+print('centrality started')
+centrality = []
+for i, cos in enumerate(pairwise_cos):
+    if i % 1 == 0:
+        print(f'{i} centralities computed')
+    scores = degree_centrality_scores(cos)
+    centrality.append(np.argsort(-scores))
+
+print('centrality done')
+del pairwise_cos
+
 
 sum_len = test['sum_len'].tolist()
-zipped = zip(sum_len, central_indices)
+zipped = zip(sum_len, centrality)
 c = [pair[1][:pair[0]] for pair in zipped]
 
 def sample(lst, indices):
@@ -47,3 +62,17 @@ def sample(lst, indices):
 
 test['ix'] = c
 test['generated'] = test.apply(lambda row: sample(row['split_text'], row['ix']), axis =1)
+print(f'{time.time()-t}')
+
+test['joined'] = test['generated'].apply(lambda x: ' '.join([str(a) for a in x]))
+
+from rouge import Rouge
+rouge = Rouge()
+scores = rouge.get_scores(test['joined'].tolist(), test['Sum'].tolist())
+import json
+with open('../results/lexrank.json', 'w') as handler:
+        json.dump(scores, handler)
+
+print(scores)
+print(test.columns)
+test[['Text', 'Sum', 'joined']].to_csv('lexrank_results.csv', index=False, sep=',')

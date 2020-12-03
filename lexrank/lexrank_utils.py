@@ -36,3 +36,4 @@ def power_method(mat):
             return next_eigen
         eigen = next_eigen
         t = np.dot(t, t)
+        c+=1

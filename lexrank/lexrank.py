@@ -6,10 +6,12 @@ import nltk
 import numpy as np
 from lexrank_utils import *
 import time
+import pickle
 
 t = time.time()
 
-test = pd.read_csv('../data/test.csv', sep=',')[:100]
+test = pd.read_csv('../data/test.csv', sep=',')[7500:12500]
+print(test[test['sum_len'] == 0].sum())
 model = SentenceTransformer('../models/', device='cuda')
 
 test['split_text'] = test['Text'].apply(nltk.sent_tokenize)
@@ -49,9 +51,11 @@ for i, cos in enumerate(pairwise_cos):
     scores = degree_centrality_scores(cos)
     centrality.append(np.argsort(-scores))
 
+with open('./centrality.pkl', 'wb') as handler:
+    pickle.dump(centrality, handler)
+
 print('centrality done')
 del pairwise_cos
-
 
 sum_len = test['sum_len'].tolist()
 zipped = zip(sum_len, centrality)
@@ -65,14 +69,13 @@ test['generated'] = test.apply(lambda row: sample(row['split_text'], row['ix']),
 print(f'{time.time()-t}')
 
 test['joined'] = test['generated'].apply(lambda x: ' '.join([str(a) for a in x]))
+test[['Text', 'Sum', 'joined']].to_csv('lexrank_results.csv', index=False, sep=',')
 
 from rouge import Rouge
 rouge = Rouge()
-scores = rouge.get_scores(test['joined'].tolist(), test['Sum'].tolist())
+scores = rouge.get_scores(test['joined'].tolist(), test['Sum'].tolist(), avg=True, ignore_empty=True)
 import json
 with open('../results/lexrank.json', 'w') as handler:
         json.dump(scores, handler)
 
 print(scores)
-print(test.columns)
-test[['Text', 'Sum', 'joined']].to_csv('lexrank_results.csv', index=False, sep=',')

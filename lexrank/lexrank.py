@@ -10,7 +10,7 @@ import pickle
 
 t = time.time()
 
-test = pd.read_csv('../data/test.csv', sep=',')[7500:12500]
+test = pd.read_csv('../data/test.csv', sep=',')[10:]
 print(test[test['sum_len'] == 0].sum())
 model = SentenceTransformer('../models/', device='cuda')
 

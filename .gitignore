@@ -22,4 +22,6 @@ pdf/
 *.swp
 *.pkl
 *.bin
-
+*.yup
+*.orig
+*.model

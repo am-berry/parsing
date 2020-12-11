@@ -1,6 +1,9 @@
 env/
 __pycache__/
+<<<<<<< HEAD
 __pycache__
+=======
+>>>>>>> 39595f8a87b536d94828777e7220a7fa8dde1ecb
 PreSumm/
 target/
 temp/
@@ -20,6 +23,9 @@ pdf/
 *.story
 *.pt
 *.swp
-*.pkl
+<<<<<<< HEAD
 *.bin
-
+*.yup
+*.pkl 
+=======
+>>>>>>> 39595f8a87b536d94828777e7220a7fa8dde1ecb

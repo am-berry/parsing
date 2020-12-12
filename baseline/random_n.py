@@ -1,9 +1,6 @@
 import random
-<<<<<<< HEAD
 import string
 
-=======
->>>>>>> 39595f8a87b536d94828777e7220a7fa8dde1ecb
 import numpy as np
 import pandas as pd
 import nltk
@@ -13,7 +10,7 @@ df = pd.read_csv('../data/test.csv')
 
 df['tokenized_text'] = df['Text'].apply(nltk.sent_tokenize)
 
-rands = df['tokenized_text'].apply(lambda x: random.sample(x,1))
+rands = df['tokenized_text'].apply(lambda x: random.sample(x, min(3, len(x))))
 gens = rands.apply(lambda x: ''.join([str(a) for a in x])).tolist()
 refs = df['Sum'].tolist()
 print(len(gens), len(refs))
@@ -35,5 +32,5 @@ r_scores = rouge.get_scores(gens, refs, avg=True, ignore_empty=True)
 print(r_scores)
 
 import json
-with open('./random.json', 'w') as handler:
+with open('./random3.json', 'w') as handler:
     json.dump(r_scores, handler)

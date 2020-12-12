@@ -1,8 +1,0 @@
-[2020-09-27 17:11:34,065 INFO] https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt not found in cache or force_download set to True, downloading to /tmp/tmp2ken06v_
-[2020-09-27 17:11:34,761 INFO] copying /tmp/tmp2ken06v_ to cache at /home/smooth/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
-[2020-09-27 17:11:34,762 INFO] creating metadata file for /home/smooth/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
-[2020-09-27 17:11:34,762 INFO] removing temp file /tmp/tmp2ken06v_
-[2020-09-27 17:11:34,763 INFO] loading vocabulary file https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt from cache at /home/smooth/.cache/torch/pytorch_transformers/26bc1ad6c0ac742e9b52263248f6d0f00068293b33709fae12320c0e35ccfbbb.542ce4285a40d23a559526243235df47c5f75c197f04f37d1a0c124c32c9a084
-[2020-09-27 17:11:34,796 INFO] Processing /home/smooth/thesis/lines/.train.0.json
-[2020-09-27 17:11:42,557 INFO] Processed instances 1940
-[2020-09-27 17:11:42,557 INFO] Saving to /home/smooth/thesis/bert/.train.0.bert.pt

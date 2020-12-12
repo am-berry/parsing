@@ -14,7 +14,7 @@ from transformers import pipeline, AdamW
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 print(torch.cuda.is_available())
 tr_path = '../data/train.csv'
-train = pd.read_csv(tr_path)
+train = pd.read_csv(tr_path)[:100]
 tr, val = train_test_split(train, test_size=0.2, random_state=17)
 
 tokenizer = T5Tokenizer.from_pretrained('t5-base')
@@ -23,23 +23,26 @@ model = T5ForConditionalGeneration.from_pretrained('t5-base')
 def clean(df):
     df['Text'] = df['Text'].apply(lambda x: x.strip().replace("\n", ""))
     df['Sum'] = df['Sum'].apply(lambda x: x.strip().replace("\n", ""))
+    df['full_text'] = df['Text'].apply(lambda x: 'summarize: ' +x)
     return df 
+
+tr = clean(tr)
+val = clean(val)
 
 class SumDataset(Dataset):
     def __init__(self, tokenizer, df):
         self.tokenizer = tokenizer
-        self.df = clean(df)
-        self.full_text = self.df['Text'].apply(lambda x: 'summarize: ' + x) 
-        self.text = self.tokenizer.batch_encode_plus(self.full_text, truncation=True, padding=True)
-        self.summaries = self.tokenizer.batch_encode_plus(self.df.Sum, truncation=True, padding=True)
-        self.text.update(labels=self.summaries.get('input_ids'))
-        self.text.update(decoder_attention_mask=self.summaries.get('attention_mask'))
+        self.df = df
 
     def __len__(self):
-        return len(self.summaries)
+        return self.df.shape[0]
 
     def __getitem__(self, idx):
-        return {key: torch.tensor(val[idx]) for key, val in self.text.items()}
+        source = self.tokenizer.batch_encode_plus(self.df.full_text, truncation=True, padding=True)
+        target = self.tokenizer.batch_encode_plus(self.df.Sum.tolist(), truncation=True, padding=True)
+        source.update(labels=target.get('input_ids'))
+        source.update(decoder_attention_mask=target.get('attention_mask'))
+        return {key: torch.tensor(val[idx]) for key, val in source.items()}
 
 train_dataset = SumDataset(tokenizer, tr)
 val_dataset = SumDataset(tokenizer, val)
@@ -73,7 +76,7 @@ optim = AdamW(model.parameters(), lr=5e-5)
 print('Beginning training now: ')
 train_losses = []
 val_losses = []
-for epoch in tqdm(range(25)):
+for epoch in tqdm(range(3)):
     running_loss = 0.0
     running_val_loss = 0.0
     for batch in train_loader:
@@ -114,5 +117,6 @@ plt.xlabel("Epoch")
 plt.ylabel("Loss")
 plt.xlim(left=1)
 plt.savefig('losses.png')
-model.save_pretrained("./summ_model/summ_model")
-tokenizer.save_pretrained("./summ_model/summ_model")
+save_out = "./full_sum/"
+model.save_pretrained(save_out)
+tokenizer.save_pretrained(save_out)

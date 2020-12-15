@@ -4,7 +4,7 @@ import nltk
 from sklearn.model_selection import train_test_split
 r=17
 
-df = pd.read_csv('prp.csv', sep = ',')
+df = pd.read_csv('../data/prp.csv', sep = ',')
 print('whole csv loaded')
 
 train, test = train_test_split(df, train_size=120000, test_size=60000, shuffle=True, random_state=r)
@@ -74,8 +74,8 @@ del generated_test, reference_test
 
 # want to save original text, reference summary and summary length 
 
-train_df.to_csv('./data/train.csv', sep=',', index=False)
-train_df.to_csv('./data/test.csv', sep=',', index=False)
+train_df.to_csv('../data/train.csv', sep=',', index=False)
+test_df.to_csv('../data/test.csv', sep=',', index=False)
 
 '''
 evaluator = rouge.Rouge(metrics=['rouge-n', 'rouge-l', 'rouge-w'],

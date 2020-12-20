@@ -1,8 +1,10 @@
+# Simple script to calculate the average scores of the three separate runs of LexRank
+
 import json
 import os
 
 files = os.listdir()
-relevant_files = [file for file in files if "1" in file and ".json" in file or '32000_' in file]
+relevant_files = [file for file in files if ".json" in file]
 print(relevant_files)
 
 r1f = 0

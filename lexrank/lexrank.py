@@ -12,15 +12,21 @@ import string
 
 t = time.time()
 oa_scores = []
+
+# Load models into memory 
 model = SentenceTransformer('../models/roberta-large-ft/')
+# Encode a random sentence as the model implementation requires extra time for first encoding for some reason
 q = model.encode(["asdf"])
+
+# Load dataset into memory, cleanup 
 df = pd.read_csv('../data/test.csv', sep=',')
 df.dropna(inplace=True)
 df['split_text'] = df['Text'].apply(nltk.sent_tokenize)
-df['sum_len'] = df['sum_len'].astype(int)
-print(df['sum_len'].sum())
+df['tokenized_summ'] = df['Sum'].astype(str).apply(nltk.sent_tokenize)
+df['sum_len'] = df['tokenized_summ'].apply(len)
 
-for a in [(16000, 32000), (32000, -1)]:
+# Splitting it into three rounds as mem errors if all done in one go
+for a in [(0, 16000), (16000, 32000), (32000, -1)]:
     test = df[a[0]:a[1]] 
     split_sents = test['split_text'].tolist()
 
@@ -60,6 +66,7 @@ for a in [(16000, 32000), (32000, -1)]:
 
     del embeddings
 
+    # computation of centrality scores imported from lexrank_utils.py 
     print('centrality started')
     centrality = []
     for i, cos in enumerate(pairwise_cos):
@@ -71,6 +78,7 @@ for a in [(16000, 32000), (32000, -1)]:
     print('centrality done')
     del pairwise_cos
 
+    # Getting the same amount of sentences via lexrank as there is in the reference summary 
     sum_len = test['sum_len'].tolist()
     zipped = zip(sum_len, centrality)
     c = [pair[1][:int(pair[0])] for pair in zipped]

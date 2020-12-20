@@ -31,6 +31,10 @@ refs = [str(r) for r in refs]
 rouge = rouge.Rouge()
 r_scores = rouge.get_scores(gens, refs, avg=True, ignore_empty=True)
 
+# Write output to csv file 
+results_df = pd.DataFrame({'reference': refs, 'generated': gens})
+results_df.to_csv('../results/random_1.csv')
+
 # Write scores to json 
 with open('./random.json', 'w') as handler:
     json.dump(r_scores, handler)

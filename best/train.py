@@ -49,25 +49,6 @@ val_dataset = SumDataset(tokenizer, val)
 
 print('Datasets created')
 
-"""
-training_args = TrainingArguments(
-        output_dir='./results/',
-        num_train_epochs=5,
-        per_device_train_batch_size=64, 
-        per_device_eval_batch_size=64,
-        warmup_steps=500,
-        weight_decay=0.01,
-        logging_dir='./logs/',
-        )
-
-trainer = Trainer(
-        model=model,
-        args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=val_dataset
-        )
-"""
-
 model.to(device)
 train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=16, shuffle=True)
@@ -79,8 +60,8 @@ val_losses = []
 for epoch in tqdm(range(3)):
     running_loss = 0.0
     running_val_loss = 0.0
+    model.train()
     for batch in train_loader:
-        model.train()
         optim.zero_grad()
         input_ids = batch['input_ids'].to(device)
         attention_mask = batch['attention_mask'].to(device)

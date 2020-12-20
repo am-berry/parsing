@@ -1,12 +1,7 @@
-from rouge import Rouge
-import pandas as pd
-import nltk
-import string
-from sklearn.model_selection import train_test_split
-r=17
+import pandas as pd 
 
-'''
-df = pd.read_csv('../data/prp.csv', sep = ',')
+
+df=pd.read_csv('../data/prp.csv', sep = ',')
 print('whole csv loaded')
 
 train, test = train_test_split(df, train_size=120000, test_size=60000, shuffle=True, random_state=r)
@@ -74,58 +69,8 @@ new_test = pd.DataFrame(
 
 del generated_test, reference_test
 
-# want to save original text, reference summary and summary length 
+# want to save original text, reference summary and summary length
 
 train_df.to_csv('../data/train.csv', sep=',', index=False)
 test_df.to_csv('../data/test.csv', sep=',', index=False)
-'''
-
-'''
-evaluator = rouge.Rouge(metrics=['rouge-n', 'rouge-l', 'rouge-w'],
-                           max_n=2,
-                           limit_length=True,
-                           length_limit=100,
-                           length_limit_type='words',
-                           apply_avg=False,
-                           apply_best=True,
-                           alpha=0.5, # Default F1_score
-                           weight_factor=1.2,
-                           stemming=True)
-
-scores = evaluator.get_scores(refs, generated)
-
-def prepare_results(p, r, f):
-    return '\t{}:\t{}: {:5.2f}\t{}: {:5.2f}\t{}: {:5.2f}'.format(metric, 'P', 100.0 * p, 'R', 100.0 * r, 'F1', 100.0 * f)
-
-for metric, results in sorted(scores.items(), key=lambda x: x[0]):
-    print(prepare_results(results['p'], results['r'], results['f']))
-'''
-
-test = pd.read_csv('../data/test.csv')
-
-test['tokenized_text'] = test['Text'].apply(nltk.sent_tokenize)
-test['sum_len'] = test['tokenized_text'].apply(len)
-lead_n = test.apply(lambda x: x.tokenized_text[:x.sum_len], axis= 1)
-lead_n = lead_n.apply(lambda x: ''.join([str(a) for a in x]))
-
-gens = lead_n.tolist()
-refs = test['Sum'].tolist()
-print(len(gens), len(refs))
-
-gen_ref = zip(gens, refs)
-gen_ref = [_ for _ in gen_ref if not all(j in string.punctuation for j in _[0])]
-gens, refs  = zip(*gen_ref)
-print(len(gens), len(refs))
-
-gens = [str(g) for g in gens]
-refs = [str(r) for r in refs]
-
-rouge = Rouge()
-scores = rouge.get_scores(gens, refs, avg=True, ignore_empty=True)
-print(scores)
-
-import json
-
-with open('./results/lead_n.json', 'w') as handler:
-    json.dump(scores, handler)
 

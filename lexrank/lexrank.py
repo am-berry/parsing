@@ -7,35 +7,40 @@ import numpy as np
 from lexrank_utils import *
 import time
 import pickle
-<<<<<<< HEAD
 import gc
 import string 
 
 t = time.time()
 oa_scores = []
+model = SentenceTransformer('../models/roberta-large-ft/')
+q = model.encode(["asdf"])
+df = pd.read_csv('../data/test.csv', sep=',')
+df.dropna(inplace=True)
+df['split_text'] = df['Text'].apply(nltk.sent_tokenize)
+df['sum_len'] = df['sum_len'].astype(int)
+print(df['sum_len'].sum())
 
-for a in [(30001, -1)]:
-=======
-
-t = time.time()
-scores = []
-
-for a in [(10,30000), (30001, -1)]:
->>>>>>> 39595f8a87b536d94828777e7220a7fa8dde1ecb
-    test = pd.read_csv('../data/test.csv', sep=',')[a[0]:a[1]]
-    print(test[test['sum_len'] == 0].sum())
-    model = SentenceTransformer('../models/', device='cuda')
-
-    test['split_text'] = test['Text'].apply(nltk.sent_tokenize)
+for a in [(16000, 32000), (32000, -1)]:
+    test = df[a[0]:a[1]] 
     split_sents = test['split_text'].tolist()
 
-    embeddings = []
-    for i, doc in enumerate(split_sents):
-        if i % 100 == 0:
-            print(f'{i} sentences encoded')
-        embeddings.append(model.encode(doc))
+    to_embed = []
+    shapes = []
+    for doc in split_sents:
+        to_embed.extend(doc)
+        shapes.append(len(doc))
 
+    embedding = model.encode(to_embed)
+    print('encoding done')
+    embeddings = [] 
+    cnt = 0
+    for i in shapes:
+        embeddings.append(embedding[cnt:cnt+i])
+        cnt+=i
+
+    embeddings = np.array(embeddings)
     print(f'embeddings done')
+    del embedding
     del split_sents
 
     # implementation of fast pairwise cosine similarity calculations
@@ -63,15 +68,12 @@ for a in [(10,30000), (30001, -1)]:
         scores = degree_centrality_scores(cos)
         centrality.append(np.argsort(-scores))
 
-    with open('./centrality.pkl', 'wb') as handler:
-        pickle.dump(centrality, handler)
-
     print('centrality done')
     del pairwise_cos
 
     sum_len = test['sum_len'].tolist()
     zipped = zip(sum_len, centrality)
-    c = [pair[1][:pair[0]] for pair in zipped]
+    c = [pair[1][:int(pair[0])] for pair in zipped]
 
     def sample(lst, indices):
         return [lst[i] for i in indices]
@@ -81,9 +83,8 @@ for a in [(10,30000), (30001, -1)]:
     print(f'{time.time()-t}')
 
     test['joined'] = test['generated'].apply(lambda x: ' '.join([str(a) for a in x]))
-    test[['Text', 'Sum', 'joined']].to_csv('lexrank_results.csv', index=False, sep=',')
+    test[['Text', 'Sum', 'joined']].to_csv(f'{a[0]}lexrank_results.csv', index=False, sep=',')
 
-<<<<<<< HEAD
     gens = test['joined'].tolist()
     refs = test['Sum'].tolist()
 
@@ -94,24 +95,12 @@ for a in [(10,30000), (30001, -1)]:
     from rouge import Rouge
     rouge = Rouge()
     score = rouge.get_scores(gens, refs, avg=True, ignore_empty=True)
-=======
-    from rouge import Rouge
-    rouge = Rouge()
-    score = rouge.get_scores(test['joined'].tolist(), test['Sum'].tolist(), avg=True, ignore_empty=True)
->>>>>>> 39595f8a87b536d94828777e7220a7fa8dde1ecb
     import json
     out_file = f'{a[0]}_lexrank.json'
     with open(out_file, 'w') as handler:
             json.dump(score, handler)
 
-    print(score)
-<<<<<<< HEAD
     oa_scores.append(score)
     gc.collect()
 
 print(oa_scores)
-=======
-    scores.append(score)
-
-print(scores)
->>>>>>> 39595f8a87b536d94828777e7220a7fa8dde1ecb

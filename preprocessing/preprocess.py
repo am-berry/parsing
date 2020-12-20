@@ -4,7 +4,6 @@ import pandas as pd
 import nltk
 import rouge
 
-'''
 d = pd.read_csv('res.csv') 
 
 def f(x):
@@ -32,7 +31,7 @@ d.drop_duplicates(inplace=True)
 d.drop('Summary', axis= 1,inplace=True)
 
 d.to_csv('processed.csv', sep = ',', index=False)
-'''
+
 nltk.download('punkt')
 
 d = pd.read_csv('processed.csv', sep=',', error_bad_lines=False)
@@ -44,6 +43,3 @@ d['sum_len'] = d['sum_sents'].apply(len)
 
 print(d.head(10))
 d.to_csv('prp.csv', sep=',', index=False)
-
-
-

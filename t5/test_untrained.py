@@ -84,4 +84,4 @@ print('Greedy done')
 
 # Outputting results 
 final = pd.DataFrame(triplets, columns = ['original', 'pred_summary', 'orig_summary'])
-final.to_csv('./base_greedy.csv')
+final.to_csv('../results/base_greedy.csv')

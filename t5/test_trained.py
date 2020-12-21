@@ -19,8 +19,8 @@ test_path = "../data/test.csv"
 test = pd.read_csv(test_path)
 
 # Model loading from trained dir 
-tokenizer = T5Tokenizer.from_pretrained('./trained_model/')
-model = T5ForConditionalGeneration.from_pretrained('./trained_model/')
+tokenizer = T5Tokenizer.from_pretrained('../models/t5-finetuned/')
+model = T5ForConditionalGeneration.from_pretrained('../models/t5-finetuned/')
 
 # Arbitrary cleaning functions 
 def clean(df):
@@ -83,7 +83,7 @@ print('Beam 4 done')
 # Outputting results 
 
 final = pd.DataFrame(triplets, columns = ['original', 'pred_summary', 'orig_summary'])
-final.to_csv('./finetuned_beam4.csv')
+final.to_csv('../results/finetuned_beam4.csv')
 del final, triplets
 
 # Evaluation loop for greedy search 
@@ -108,7 +108,7 @@ print('Greedy done')
 
 # Outputting results 
 final = pd.DataFrame(triplets, columns = ['original', 'pred_summary', 'orig_summary'])
-final.to_csv('./finetuned_greedy.csv')
+final.to_csv('../results/finetuned_greedy.csv')
 del final, triplets
 
 # Evaluation loop for nucleus sampling 
@@ -131,6 +131,6 @@ print('Nucleus done')
 
 # Outputting results 
 final = pd.DataFrame(triplets, columns = ['original', 'pred_summary', 'orig_summary'])
-final.to_csv('./finetuned_nucleus.csv')
+final.to_csv('../results/finetuned_nucleus.csv')
 
 # Rouge calculations are computed in rouge_calcs.py

@@ -101,7 +101,7 @@ for epoch in tqdm(range(3)):
     tokenizer.save_pretrained(f'./models/modelchkpt{epoch}/')
 
 # Saving model 
-save_out = "./trained_model/"
+save_out = "../models/t5-finetuned/"
 model.save_pretrained(save_out)
 tokenizer.save_pretrained(save_out)
 print(train_losses)

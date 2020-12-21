@@ -16,7 +16,7 @@ device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('
 print(torch.cuda.is_available())
 torch.backends.cudnn.benchmark = True
 test_path = "../data/test.csv"
-test = pd.read_csv(test_path)[:10000]
+test = pd.read_csv(test_path)
 
 # Model loading from trained dir 
 tokenizer = T5Tokenizer.from_pretrained('./trained_model/')

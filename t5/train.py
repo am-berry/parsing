@@ -80,7 +80,7 @@ for epoch in tqdm(range(3)):
         loss.backward()
         optim.step()
         optim.zero_grad()
-        if i % 1000 == 0:
+        if i % 5000 == 0:
             model.save_pretrained(f'./models/modelchkpt_epoch{epoch}_step{i}/') 
             tokenizer.save_pretrained(f'./models/modelchkpt_epoch{epoch}_step{i}/') 
     model.eval()
